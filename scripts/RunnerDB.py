@@ -103,6 +103,7 @@ class RunnerDB:
 
         # List all nodes in the project
         self.UpdateProjectOPs(op('/'))
+        self.UpdateUserPaletteIndex(op('userPaletteFolder').rows()[1:])
         return
 
     def InitSublist(self, entries):
@@ -127,6 +128,24 @@ class RunnerDB:
 
         writer.commit()
         return
+
+    def UpdateUserPaletteIndex(self, entries):
+        # First, remove all tox from the index
+        writer = self.index.writer()
+        delQuery = query.And([query.Term("type", "PALETTE"),
+                              query.Regex("path", app.userPaletteFolder + '/*')])
+        writer.delete_by_query(delQuery)
+
+        # Now insert all the entries in the index
+        prefixLen = len(app.userPaletteFolder)
+        for entry in entries:
+            writer.add_document(title='My Components/' + entry[2].val[prefixLen:],
+                                type='PALETTE',
+                                opName=entry[0].val,
+                                path=entry[1].val,
+                                )
+        writer.commit()
+
 
     def UpdateTOXIndex(self, entries):
         # First, remove all tox from the index

@@ -203,13 +203,24 @@ class Runner:
 
     def placeNewFromPalette(self, path, name):
         # Load the tox
-        tox = ui.panes.current.owner.loadTox(path, unwired=False, pattern=name)
+        pattern = name
+        if path.startswith(app.userPaletteFolder):
+            pattern = None
+
+        tox = ui.panes.current.owner.loadTox(path, unwired=False, pattern=pattern)
         tox.tags.add('runner-keepout')
+        tox.nodeX = 0
+        tox.nodeY = 0
         self.Close()
 
         if ui.panes.current.type == PaneType.NETWORKEDITOR:
-            tox.nodeX = ui.panes.current.x
-            tox.nodeY = ui.panes.current.y
+            if pattern is None:
+                ui.panes.current.placeOPs([tox])
+            else:
+                tox.nodeX = ui.panes.current.x
+                tox.nodeY = ui.panes.current.y
+
+
 
         return
 
