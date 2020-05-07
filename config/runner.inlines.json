@@ -1,0 +1,10 @@
+{
+  "runner.inlines": [
+    {
+      "method": "checkEquation"
+    },
+    {
+      "method": "checkPythonExpr"
+    }
+  ]
+}

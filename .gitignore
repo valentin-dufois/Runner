@@ -1,0 +1,14 @@
+# Pycharm stuffs
+.idea
+
+# TD Stuffs
+Exports/
+Backup/
+presets/
+Runner.*.toe
+
+# MacOS Stuffs
+.DS_Store
+
+# TD Python Stubs for IDE
+scripts/_stubs

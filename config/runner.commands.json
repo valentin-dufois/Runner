@@ -1,0 +1,138 @@
+{
+  "runner.dialogs": [
+    {
+      "label": "Open Beat Window",
+      "conditionalMethod": null,
+      "executeMethod": "openBeatWindow"
+    },
+    {
+      "label": "Open Bookmarks",
+      "conditionalMethod": null,
+      "executeMethod": "openBookmarks"
+    },
+    {
+      "label": "Open Errors Window",
+      "conditionalMethod": null,
+      "executeMethod": "openErrorsWindow"
+    },
+    {
+      "label": "Export Movie",
+      "conditionalMethod": null,
+      "executeMethod": "exportMovie",
+      "help": "Open the Export Movie dialog. If a TOP is selected, it will be referenced in the dialog."
+    },
+    {
+      "label": "Import File",
+      "conditionalMethod": null,
+      "executeMethod": "importFile"
+    },
+    {
+      "label": "Open Key Manager",
+      "conditionalMethod": null,
+      "executeMethod": "openKeyManager"
+    },
+    {
+      "label": "Open MIDI Device Mapper",
+      "conditionalMethod": null,
+      "executeMethod": "openMIDIMapper"
+    },
+    {
+      "label": "New Project",
+      "conditionalMethod": null,
+      "executeMethod": "newProject"
+    },
+    {
+      "label": "Show the Palette",
+      "conditionalMethod": null,
+      "executeMethod": "openPalette"
+    },
+    {
+      "label": "Open Performance Monitor",
+      "conditionalMethod": null,
+      "executeMethod": "openPerformanceMonitor"
+    },
+    {
+      "label": "Open Preferences",
+      "conditionalMethod": null,
+      "executeMethod": "openPreferences"
+    },
+    {
+      "label": "Open Textport",
+      "conditionalMethod": null,
+      "executeMethod": "openTextport"
+    },
+    {
+      "label": "Open Window Placement Dialog",
+      "conditionalMethod": null,
+      "executeMethod": "openWindowPlacement"
+    }
+  ],
+  "runner.runner": [
+    {
+      "label": "Runner Settings...",
+      "conditionalMethod": null,
+      "executeMethod": "openSettings",
+      "help": "Opens Runner settings."
+    }, {
+      "label": "Refresh Project OP Search Index",
+      "conditionalMethod": null,
+      "executeMethod": "refreshOPsIndex",
+      "help": "Refresh the search list of OPs in the project."
+    }
+  ],
+  "runner.nodes": [
+    {
+      "label": "Customize Operator",
+      "conditionalMethod": "selectedOPIsCOMP",
+      "executeMethod": "openCustomizeDialog",
+      "help": "Opens the Customize Operator dialog."
+    },
+    {
+      "label": "Align Operators Horizontally",
+      "conditionalMethod": "selectionIsMultiple",
+      "executeMethod": "alignOPsHorizontally",
+      "help": "Align the selected operators on the same line."
+    },
+    {
+      "label": "Align Operators Vertically",
+      "conditionalMethod": "selectionIsMultiple",
+      "executeMethod": "alignOPsVertically",
+      "help": "Align the selected operators on the same column."
+    },
+    {
+      "label": "Distribute Operators Horizontally",
+      "conditionalMethod": "selectionIsMultiple",
+      "executeMethod": "distributeOPsHorizontally",
+      "help": "Equaly space the selected operators horizontally"
+    },
+    {
+      "label": "Distribute Operators Vertically",
+      "conditionalMethod": "selectionIsMultiple",
+      "executeMethod": "distributeOPsVertically",
+      "help": "Equaly space the selected operators vertically"
+    },
+    {
+      "label": "Save as TOX...",
+      "conditionalMethod": "selectedOPIsCOMP",
+      "executeMethod": "openSaveAsTOXOptions"
+    },
+    {
+      "label": "Save Preset",
+      "conditionalMethod": null,
+      "executeMethod": "savePreset",
+      "help": "Save a copy of the selected node that can be recalled at any time."
+    },
+    {
+      "label": "Set Smoothness to Nearest",
+      "conditionalMethod": "selectedOPsAreTOP",
+      "executeMethod": "setTOPSmoothnessToNearest",
+      "help": "Change the selected TOPs input and viewer smoothness to Nearest"
+    },
+    {
+      "label": "Set Smoothness to Interpolate",
+      "conditionalMethod": "selectedOPsAreTOP",
+      "executeMethod": "setTOPSmoothnessToInterpolate",
+      "help": "Change the selected TOPs input and viewer smoothness to Interpolate"
+    }
+  ]
+}
