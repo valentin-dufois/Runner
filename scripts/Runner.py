@@ -80,7 +80,6 @@ class Runner:
 
         # Enable the panel
         self.runner.par.enable = True
-        self.list.ResetSelection()
 
         # Open window and give focus
         self.window.par.winopen.pulse()
