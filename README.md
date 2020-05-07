@@ -1,7 +1,7 @@
 # Runner
 
 ![Supported plateform](https://img.shields.io/badge/plateform-macOS%20%7C%20Windows-lightgrey?style=flat-square)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/boisier/runner?include_prereleases&label=release&style=flat-square)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Boisier/Runner?include_prereleases&style=flat-square)
 
 
 
