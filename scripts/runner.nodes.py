@@ -173,6 +173,7 @@ def savePreset():
     base = dummyNetwork.create(baseCOMP, 'preset')
 
     if ui.panes.current.owner.currentChild.path.startswith(parent.runner.path):
+        ui.status = "Runner: It is not possible to save Runner itself as a preset."
         return  # Do not save the Runner itself
 
     node = base.copy(ui.panes.current.owner.currentChild)
@@ -180,13 +181,13 @@ def savePreset():
 
     filepath = iop.settings['presetsfolder', 1].val
 
-    # if len(filepath) == 0:
-    #     ui.messageBox("Runner could not execute command", "Please define a preset folder.", buttons=['Ok'])
-    #     return
-    #
-    # # Save the preset
-    # filename = 'preset_' + base.name + '.tox'
-    # base.save(filepath + '/' + filename)
+    if len(filepath) == 0:
+        ui.messageBox("Runner could not execute command", "Please define a preset folder.", buttons=['Ok'])
+        return
+
+    # Save the preset
+    filename = 'preset_' + base.name + '.tox'
+    base.save(filepath + '/' + filename)
 
 
 def setTOPSmoothnessToNearest():

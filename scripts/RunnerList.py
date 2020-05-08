@@ -25,8 +25,11 @@ class RunnerList:
 
         return
 
+    def setListHeight(self, h):
+        self.list.par.h = h
+
     def Clear(self):
-        self.list.par.h = 0
+        self.setListHeight(0)
         self.list.par.rows = 0
         self.results = []
         self.helpTOP.par.text = ''
@@ -134,7 +137,7 @@ class RunnerList:
 
             sizeAcc += row.rowHeight
 
-        self.list.par.h = min(sizeAcc, 300)
+        self.setListHeight(min(sizeAcc, 300))
         return
 
     def ResetSelection(self):

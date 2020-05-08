@@ -26,9 +26,15 @@ class Runner:
         self.window = op('runnerWindow')
         self.field = op('UI/field')
         self.list = op('UI/list')
+        self.working = True
 
         # Check Dependencies
-        mod('dependenciesChecker').CheckDependencies()
+        try:
+            mod('dependenciesChecker').CheckDependencies()
+        except:
+            ui.messageBox('Warning', 'Runner could not install its depencies.\nMake sure you are connected to internet'
+                                     'or that the module Whoosh is available\nfor use with python inside TouchDesigner.')
+            self.working = False
 
         return
 
@@ -67,6 +73,10 @@ class Runner:
         return
 
     def displayRunner(self):
+        if not self.working:
+            ui.status = 'Runner cannot be used until its dependencies are fixed.'
+            return
+
         # Reset runner properly
         for node in self.dummyNetwork.children:
             node.destroy()

@@ -24,6 +24,12 @@ tmpFolder = pythonFolder + '/dl'
 
 
 def CheckDependencies():
+    try:
+        from whoosh.index import Index
+        return
+    except:
+        ui.status = "Installing required python package for Runner"
+
     # Make sure our python folder is in the path
     if pythonFolder not in sys.path:
         sys.path.append(pythonFolder)
@@ -36,8 +42,6 @@ def CheckDependencies():
     # We need to install Whoosh
     import zipfile
     import shutil
-
-    ui.status = "Installing required python package for Runner"
 
     # Create temporary folder
     Path(tmpFolder).mkdir(parents=True, exist_ok=True)
