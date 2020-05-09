@@ -8,6 +8,9 @@ if False:
     from _stubs import *
 
 from typing import List, Dict
+import urllib.request
+import ssl
+import json
 
 class Runner:
     builtinType = ['COMP', 'TOP', 'CHOP', 'SOP', 'MAT', 'DAT']
@@ -17,6 +20,7 @@ class Runner:
 
         # The component to which this extension is attached
         self.runner = ownerComp
+        self.version = ownerComp.par.Version
 
         # Internal
         self.db = op('db')
@@ -28,15 +32,24 @@ class Runner:
         self.list = op('UI/list')
         self.working = True
 
+        self.checkForUpdate()
+
         # Check Dependencies
         try:
             mod('dependenciesChecker').CheckDependencies()
         except:
+            self.working = False
             ui.messageBox('Warning', 'Runner could not install its depencies.\nMake sure you are connected to internet'
                                      'or that the module Whoosh is available\nfor use with python inside TouchDesigner.')
-            self.working = False
 
         return
+
+    def checkForUpdate(self):
+        # Get latest release version from github
+        releases = json.loads(urllib.request.urlopen("https://api.github.com/repos/Boisier/Runner/releases", context=ssl.SSLContext()).read())
+        onlineRelease = releases[0]['tag_name']
+        if onlineRelease[1:] != self.version: # Ignore 'v'
+            ui.status = 'Runner: An update is available for Runner (v' + self.version + ' -> ' + releases[0]['tag_name'] + ')'
 
     def GetDB(self):
         return self.db
