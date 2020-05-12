@@ -16,13 +16,13 @@
       "executeMethod": "openErrorsWindow"
     },
     {
-      "label": "Export Movie",
+      "label": "Export Movie...",
       "conditionalMethod": null,
       "executeMethod": "exportMovie",
       "help": "Open the Export Movie dialog. If a TOP is selected, it will be referenced in the dialog."
     },
     {
-      "label": "Import File",
+      "label": "Import File...",
       "conditionalMethod": null,
       "executeMethod": "importFile"
     },
@@ -37,7 +37,7 @@
       "executeMethod": "openMIDIMapper"
     },
     {
-      "label": "New Project",
+      "label": "New Project...",
       "conditionalMethod": null,
       "executeMethod": "newProject"
     },
@@ -82,7 +82,7 @@
   ],
   "runner.nodes": [
     {
-      "label": "Customize Operator",
+      "label": "Customize Operator...",
       "conditionalMethod": "selectedOPIsCOMP",
       "executeMethod": "openCustomizeDialog",
       "help": "Opens the Customize Operator dialog."

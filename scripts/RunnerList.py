@@ -1,3 +1,18 @@
+#    Copyright 2020 Valentin Dufois
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
+
 """
 The RunnerList handles the display of results and interactions with it
 """
@@ -21,6 +36,7 @@ class RunnerList:
         self.list = ownerComp
         self.db = parent.runner.GetDB()
         self.results = []
+        self.field = parent.runner.op('UI/field')
         self.helpTOP = parent.runner.op('UI/help/helptext')
 
         return
@@ -34,14 +50,14 @@ class RunnerList:
         self.results = []
         self.helpTOP.par.text = ''
         self.db.ClearInput()
+        self.field.ext.RunnerField.setHintText('')
 
     def Refresh(self):
-        self.OnInputUpdate(self.db.GetInput())
+        self.OnInputUpdate(self.field.GetInput())
 
     def OnInputUpdate(self, userInput: str):
         if not parent.runner.IsUsingSublist() and len(userInput) < 3:
             self.Clear()
-
             return
 
         # Request results from the db and display them
@@ -108,11 +124,14 @@ class RunnerList:
 
             if type == 'COMMAND':
                 tooltip.text = ''
+
+                if len(data['package']) > 0 and not data['package'].startswith('runner'):
+                    tooltip.text = parent.runner.op('plugins/' + data['package'].split('.')[0] + '/plugin')['name', 1].val.upper()
+
                 if len(label.text) > 57:
                     label.text = label.text[:54] + '...'
 
             if type == 'INLINE':
-
                 textLen = len(label.text)
                 if textLen > 50:
                     tooltip.textJustify = JustifyType.CENTERLEFT
@@ -174,7 +193,20 @@ class RunnerList:
         row.bgColor = tuple(colors['focusbg'])
         row.textColor = tuple(colors['focusfont'])
 
+        if rowType != 'INLINE':
+            if rowType in self.builtinType:
+                hint = self.results[newRow]['opType']
+            elif rowType == 'TOX' or rowType == 'PALETTE' or rowType == 'OP':
+                hint = self.results[newRow]['opName']
+            else:
+                hint = self.results[newRow]['title']
+
+            self.field.ext.RunnerField.setHintText(hint)
+
         self.selection = newRow
+
+        if newRow == 0:
+            self.list.scroll(0, 0)
 
         return
 

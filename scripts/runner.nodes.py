@@ -1,4 +1,22 @@
+#    Copyright 2020 Valentin Dufois
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
+
 # pyCharm trick
+import os
+from sys import path
+
 # noinspection PyUnreachableCode
 if False:
     # noinspection PyUnresolvedReferences
@@ -8,7 +26,10 @@ import math
 import copy
 
 def selectedOPIsCOMP():
-    return ui.panes.current.owner.currentChild.isCOMP
+    try:
+        return ui.panes.current.owner.currentChild.isCOMP
+    except:
+        return False
 
 
 def selectionIsMultiple():
@@ -72,25 +93,29 @@ def getNodePosY(node):
 
 def distributeOPsHorizontally():
     ops = ui.panes.current.owner.selectedChildren
-    ops.append(ui.panes.current.owner.currentChild)
+    if ui.panes.current.owner.currentChild not in ui.panes.current.owner.selectedChildren:
+        ops.append(ui.panes.current.owner.currentChild)
 
     ops.sort(key=getNodePosX)
+    print(list(map(lambda x: x.nodeX, ops)))
 
     minX = ops[0].nodeX
     maxX = ops[-1].nodeX
 
-    step = (maxX - minX) / (len(ops) - 1)
+    step = (maxX - minX) / (len(ops)-1)
 
     # Adjust node positions, keep first and last in place
-    for i in range(1, len(ops) - 1):
-        ops[i].nodeX = minX + step * i;
+    for i in range(0, len(ops)):
+        print(minX + step * i)
+        ops[i].nodeX = minX + step * i
 
     return
 
 
 def distributeOPsVertically():
     ops = ui.panes.current.owner.selectedChildren
-    ops.append(ui.panes.current.owner.currentChild)
+    if ui.panes.current.owner.currentChild not in ui.panes.current.owner.selectedChildren:
+        ops.append(ui.panes.current.owner.currentChild)
 
     ops.sort(key=getNodePosY)
 
@@ -187,6 +212,9 @@ def savePreset():
 
     # Save the preset
     filename = 'preset_' + base.name + '.tox'
+    if os.path.exists(filename):
+        os.remove(filename)
+
     base.save(filepath + '/' + filename)
 
 

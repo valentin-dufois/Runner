@@ -1,5 +1,20 @@
+#    Copyright 2020 Valentin Dufois
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
+
 """
-The Runner is a ultrafast fuzzy finder built for TouchDesigner.
+The Runner is an ultrafast fuzzy finder built for TouchDesigner.
 """
 
 # noinspection PyUnreachableCode
@@ -46,10 +61,13 @@ class Runner:
 
     def checkForUpdate(self):
         # Get latest release version from github
-        releases = json.loads(urllib.request.urlopen("https://api.github.com/repos/Boisier/Runner/releases", context=ssl.SSLContext()).read())
-        onlineRelease = releases[0]['tag_name']
-        if onlineRelease[1:] != self.version: # Ignore 'v'
-            ui.status = 'Runner: An update is available for Runner (v' + self.version + ' -> ' + releases[0]['tag_name'] + ')'
+        try:
+            releases = json.loads(urllib.request.urlopen("https://api.github.com/repos/Boisier/Runner/releases", context=ssl.SSLContext()).read())
+            onlineRelease = releases[0]['tag_name']
+            if onlineRelease[1:] != self.version: # Ignore 'v'
+                ui.status = 'Runner: An update is available for Runner (v' + self.version + ' -> ' + releases[0]['tag_name'] + ')'
+        except:
+            return
 
     def GetDB(self):
         return self.db
@@ -58,31 +76,27 @@ class Runner:
         return self.dummyNetwork
 
     def GetInput(self) -> str:
-        return self.db.GetInput()
+        return self.field.GetInput()
 
     # Sublist
     def useDefaultIndex(self):
         if self.usingSublist:
             self.list.Clear()
+            self.field.Clear()
         self.usingSublist = False
 
     def useSublist(self):
         if not self.usingSublist:
-            self.clearInput()
+            self.field.Clear()
 
         self.usingSublist = True
 
     def IsUsingSublist(self):
         return self.usingSublist
 
-    def clearInput(self):
-        run("op('UI/field').par.Value0 = ''", delayFrames=1, fromOP=me)
-        self.field.op('stringField0/field').panel.fieldediting.val = ''
-        self.field.op('stringField0/field').panel.field.val = ''
-
     def SetFocus(self):
         self.window.setForeground()
-        self.field.op('stringField0/field').setKeyboardFocus(selectAll=True)
+        self.field.Focus()
         return
 
     def displayRunner(self):
@@ -95,20 +109,16 @@ class Runner:
             node.destroy()
 
         if self.window.isOpen:
-            run('parent.runner.SetFocus()', delayFrames=2, fromOP=me)
+            run('parent.runner.SetFocus()', delayFrames=2, fromOP=me, endFrame=True)
             return
 
         if not self.IsUsingSublist():
             self.list.Refresh()
 
-        # Enable the panel
-        self.runner.par.enable = True
-
         # Open window and give focus
+        self.field.interactClear()
         self.window.par.winopen.pulse()
-        self.runner.interactClear()
-        self.field.setFocus()
-        run('parent.runner.SetFocus()', delayFrames=2, fromOP=me)
+        run('parent.runner.SetFocus()', delayFrames=2, fromOP=me, endFrame=True)
         return
 
     def Open(self):
@@ -122,31 +132,33 @@ class Runner:
 
         self.useSublist()
         self.list.DisplayResults(entries)
-
+        self.field.Clear()
         self.displayRunner()
+        run('parent.runner.SetFocus()', delayFrames=2, fromOP=me)
         return
 
     def Close(self):
         self.window.par.winclose.pulse()
-        self.runner.par.enable = False
-
         self.field.interactClear()
+
+        if self.IsUsingSublist():
+            self.field.Clear()
         return
 
     def RowConditionIsValid(self, package, method):
-        if package[0:6] == 'runner':
-            package = package.split('.')[1]
-            return getattr(mod('scripts/' + package), method)()
+        if package[0:6] == 'runner':  # Runner
+            path = 'scripts/' + package.split('.')[1]
+        else:  # Plugin
+            path = 'plugins/' + package.replace('.', '/')
 
-        # TODO: Implement plugins logic
-        return
+        return getattr(mod(path), method)()
 
     def ComputeInline(self, package, method, userInput):
         if package[0:6] == 'runner':
             package = package.split('.')[1]
             return getattr(mod('scripts/' + package), method)(userInput)
 
-        # TODO: Implement plugins logic
+        # TODO: Add plugin support for inlines
         return
 
     def Execute(self, data):
@@ -242,6 +254,7 @@ class Runner:
             else:
                 tox.nodeX = ui.panes.current.x
                 tox.nodeY = ui.panes.current.y
+                self.db.UpdateProjectOPs(op(iop.settings['searchroot', 1].val))
 
 
 
@@ -263,12 +276,16 @@ class Runner:
         node.destroy()
         return
 
+    # Parameters
+    # ----------
+    # package : str
+    # method : str
     def executeCommand(self, package, method):
         if package[0:6] == 'runner':
             path = 'scripts/' + package.split('.')[1]
         else:
             # Implement plugins logic
-            path = ''
+            path = 'plugins/' + package.replace('.', '/')
             pass
 
         # Execute command
