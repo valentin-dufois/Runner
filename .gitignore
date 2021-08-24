@@ -6,6 +6,7 @@ Exports/
 Backup/
 presets/
 Plugins/
+Resources/
 Runner.*.toe
 
 # MacOS Stuffs
@@ -13,3 +14,4 @@ Runner.*.toe
 
 # TD Python Stubs for IDE
 scripts/_stubs
+

@@ -90,7 +90,7 @@ class RunnerDB:
                                         )
 
             # Palette nodes
-            paletteDir = app.samplesFolder + '/COMP/'
+            paletteDir = app.samplesFolder + '/Palette/'
             palette = glob.glob(paletteDir + '**/*.tox', recursive=True)
             for node in palette:
                 writer.add_document(title=node[len(paletteDir):-4],

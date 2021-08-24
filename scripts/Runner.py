@@ -52,8 +52,9 @@ class Runner:
         # Check Dependencies
         try:
             mod('dependenciesChecker').CheckDependencies()
-        except:
+        except urllib.error.HTTPError as e:
             self.working = False
+            print(e.msg);
             ui.messageBox('Warning', 'Runner could not install its depencies.\nMake sure you are connected to internet'
                                      'or that the module Whoosh is available\nfor use with python inside TouchDesigner.')
 
@@ -62,7 +63,7 @@ class Runner:
     def checkForUpdate(self):
         # Get latest release version from github
         try:
-            releases = json.loads(urllib.request.urlopen("https://api.github.com/repos/Boisier/Runner/releases", context=ssl.SSLContext()).read())
+            releases = json.loads(urllib.request.urlopen("https://api.github.com/repos/valentin-dufois/Runner/releases", context=ssl.SSLContext()).read())
             onlineRelease = releases[0]['tag_name']
             if onlineRelease[1:] != self.version: # Ignore 'v'
                 ui.status = 'Runner: An update is available for Runner (v' + self.version + ' -> ' + releases[0]['tag_name'] + ')'

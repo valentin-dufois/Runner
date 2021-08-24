@@ -38,11 +38,11 @@ tmpFolder = pythonFolder + '/dl'
 
 
 def CheckDependencies():
-    try:
-        from whoosh.index import Index
-        return
-    except:
-        ui.status = "Installing required python package for Runner"
+    # try:
+        # from whoosh.index import Index
+        # return
+    # except:
+    ui.status = "Installing required python package for Runner"
 
     # Make sure our python folder is in the path
     if pythonFolder not in sys.path:
@@ -50,6 +50,7 @@ def CheckDependencies():
 
     # Check if we have already installed Whoosh
     if os.path.isdir(whooshFolder):
+        ui.status = "Whooosh ok"
         # Whoosh fooder already exist, nothing to do
         return
 
@@ -60,11 +61,12 @@ def CheckDependencies():
     # Create temporary folder
     Path(tmpFolder).mkdir(parents=True, exist_ok=True)
 
-    # Download Whoosh repo
-    download_url('https://bitbucket.org/mchaput/whoosh/get/default.zip', tmpFolder + '/whoosh.zip')
+    # Dump the package zip in the temp folder
+    filename = 'Whoosh-2.7.4.zip'
+    op('dependencies').vfs[filename].export(tmpFolder)
 
     # Extract Whoosh source files
-    archive = zipfile.ZipFile(tmpFolder + '/whoosh.zip')
+    archive = zipfile.ZipFile(tmpFolder + '/' + filename)
     for file in archive.namelist():
         if file[file.index('/'):].startswith('/src/'):
             archive.extract(file, tmpFolder)
